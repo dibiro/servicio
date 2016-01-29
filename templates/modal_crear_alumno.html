@@ -1,0 +1,63 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="crear_alumno_m">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Registrar Alumno</h4>
+      </div>
+      <form action="javascript:crear_estudiante()" id="crear_alumno_f">
+        <div class="modal-body">
+            <div class="form-group ">
+              <label for="cedula">Cedula</label>
+              <input type="text" class="form-control" placeholder="Cedula" id="crear_cedula" name="cedula" required>
+            </div>
+            <div class="form-group ">
+              <label for="Nombres">Nombres</label>
+              <input type="text" class="form-control" id="Nombres" name="nombres" placeholder="Nombres" required>
+            </div>
+            <div class="form-group ">
+              <label for="Apellidos">Apellidos</label>
+              <input type="text" class="form-control" id="Apellidos" name="apellidos" placeholder="Apellidos" required>
+            </div>
+            <div class="form-group ">
+              <label for="Telefono">Telefono</label>
+              <input type="text" class="form-control" id="Telefono" name="telefono1" placeholder="Telefono" required>
+            </div>
+            <div class="form-group ">
+              <label for="Telefono2">Telefono opcional</label>
+              <input type="text" class="form-control" id="Telefono2" name="telefono2" placeholder="Telefono opcional" >
+            </div>
+            <div class="form-group ">
+              <label for="Direccion">Direccion</label>
+              <textarea class="form-control" id="Direccion" name="direccion" placeholder="Direccion" required></textarea>
+            </div>
+            <div class="form-group ">
+              <label for="Email">Email</label>
+              <input type="email" class="form-control" id="Email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="fecha_de_nacimiento">Fecha de Nacimiento</label>
+                <div class="input-group date div-margin-jr" id="btn_fecha_uno">
+                    <input type="text" name="fecha_de_nacimiento" id="fecha_de_nacimiento" class="datetimepicker form-control " data-fv-field="init_date">
+                    <span class="input-group-addon">
+                        <span><i class="fa fa-calendar"></i></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group ">
+              <label for="Sexo">Sexo</label>
+              <select class="form-control" id="Sexo" name="sexo" required >
+                <option></option>
+                <option value="1" >Masculino</option>
+                <option value="2" >Femenino</option>
+              </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
