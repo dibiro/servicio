@@ -3,26 +3,17 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseNotFound, HttpResponseRedirect
-from django.shortcuts import render_to_response, HttpResponse, render
-from django.template import RequestContext
+from django.shortcuts import HttpResponse, render
 from .models import * 
 import json
 from django.conf import settings as _settings
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import get_connection, send_mail, BadHeaderError
+from datetime import datetime, date, timedelta
 
 
 def corte_actual():
-    now = timezone.now()
-    corte = ''
-    if now.month > 3:
-        corte = str(now.year) + '-II'
-    elif now.month > 9:
-        year = now.year + 1
-        corte = str(year) + '-I'
-    else:
-        corte = str(now.year) + '-I'
-    return corte
+    return Perido.objects.get(actual=True)
 
 
 def login_view(request):
@@ -45,13 +36,13 @@ def login_view(request):
                     return HttpResponseRedirect(next)
         else:
             return HttpResponseRedirect('/')
-    return render_to_response(
+    return render(
+        request,
         'login.html',
         {
             'username': username,
             'next': next,
         },
-        context_instance=RequestContext(request)
     )
 
 
@@ -59,7 +50,7 @@ class Index(TemplateView):
     template_name = "index.html"
 
     def get(self, request, *args, **kwargs):
-        return render_to_response(self.template_name, locals(), context_instance=RequestContext(request))
+        return render(request, self.template_name, locals())
 
 
 class Servicio(TemplateView):
@@ -67,16 +58,18 @@ class Servicio(TemplateView):
 
     def get(self, request, pk, *args, **kwargs):
         alumnos = Alumnos.objects.get(cedula=pk)
+        if alumnos.fecha_de_nacimiento is not None:
+            alumnos.fecha_de_nacimiento = alumnos.fecha_de_nacimiento.strftime('%Y-%m-%d')
         cortes = Registros.objects.filter(estudiante=alumnos)
         intituciones = Instituciones.objects.filter(estado="1", cupos_disponibles__gte=0)
         actual = corte_actual()
         corte = 0
         for x in cortes:
-            if x.periodo.periodo == corte_actual():
+            if x.periodo == actual:
                 corte = 1
         if Registros.objects.filter(estudiante=alumnos, estado="3").exists():
             corte = 1
-        return render_to_response(self.template_name, locals(), context_instance=RequestContext(request))
+        return render(request, self.template_name, locals())
 
 
 def buscar_estudiante(request):
@@ -148,15 +141,16 @@ def Inscribirse(request):
     if corte == 0:
         institution = Instituciones.objects.get(id=request.POST['id_institucion'])
         if institution.cupos_disponibles > 0:
-            institution.cupos_disponibles = institution.cupos_disponibles - 1
-            institution.save()
             registro = Registros(
                 estudiante_id=request.POST['id_estudiante'],
                 intitucion_id=request.POST['id_institucion'],
                 periodo=corte_actual(),
                 estado="2",
             )
+            registro.poner_tutor()
             registro.save()
+            institution.cupos_disponibles = institution.cupos_disponibles - 1
+            institution.save()
             mensaje = 1
         else:
             mensaje = 2
@@ -164,3 +158,11 @@ def Inscribirse(request):
         mensaje = 3
     result = json.dumps(mensaje, ensure_ascii=False)
     return HttpResponse(result, content_type='application/json; charset=utf-8')
+
+
+def poner_tutor_v(request):
+    registro = Registros.objects.get(id=request.POST['id'])
+    dicc = { 'dato': registro.poner_tutor() }
+    result = json.dumps(dicc, ensure_ascii=False)
+    return HttpResponse(result, content_type='application/json; charset=utf-8')
+

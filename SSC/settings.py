@@ -9,6 +9,7 @@ LOGOUT_URL = '/logout/'
 
 INSTALLED_APPS = [
     'easy_select2',
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -83,7 +84,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'es-ve'
+LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'America/Caracas'
 
 USE_I18N = True

@@ -112,3 +112,26 @@ function Inscribirse() {
     $("#Intitucion").val("");
   };
 }
+function obtener_tutor(id) {
+  $.ajax({
+    url: '/poner_tutor/',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      id: id,
+    },
+    beforeSend: function(xhr) {xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));},
+  })
+  .done(function(data) {
+    if (data.dato==1) {
+      OmegaNotify.success('Felicidades Ya Se Te Assigno Un Tutor');
+      setTimeout(function(){ location.reload(); }, 3000);
+    } else if (data.dato==0) {
+      OmegaNotify.fail('Aun No Se Assignado Un Tutor A Esta Institucion');
+    };
+  })
+  .fail(function() {
+  })
+  .always(function() {
+  });
+}

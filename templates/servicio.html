@@ -11,15 +11,15 @@ Servicio de {{alumnos.nombres}} {{alumnos.apellidos}}
 <input type="hidden" id="id_estudiante" value="{{alumnos.id}}">
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Mis Datos</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Cortes</a></li>
-    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-user-secret"></i> Tutor</a></li>
-    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><i class="fa fa-institution"></i> Intitucion</a></li>
+    <li role="presentation" class="active"><a href="#estudiante" aria-controls="estudiante" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Mis Datos</a></li>
+    <li role="presentation"><a href="#cortes_tab" aria-controls="cortes_tab" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Cortes</a></li>
+    <li role="presentation"><a href="#tutor_tab" aria-controls="tutor_tab" role="tab" data-toggle="tab"><i class="fa fa-user-secret"></i> Tutor</a></li>
+    <li role="presentation"><a href="#institucion_tab" aria-controls="institucion_tab" role="tab" data-toggle="tab"><i class="fa fa-institution"></i> Intitucion</a></li>
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="home">
+    <div role="tabpanel" class="tab-pane active" id="estudiante">
       <form action="" id="actualizar_alumno_f" method="POST" >
         {% csrf_token %}
             <div class="row">
@@ -82,45 +82,18 @@ Servicio de {{alumnos.nombres}} {{alumnos.apellidos}}
           <button type="submit" class="btn btn-primary">Actualizar</button>
       </form>
     </div>
-    <div role="tabpanel" class="tab-pane" id="profile">
+    <div role="tabpanel" class="tab-pane" id="cortes_tab">
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        {% for x in cortes %}
-            <div class="panel panel-default">
-              <div class="panel-heading" role="tab" id="{{x.periodo}}">
-                <h4 class="panel-title">
-                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{x.periodo}}collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    {{x.periodo.periodo}}
-                  </a>
-                </h4>
-              </div>
-              <div id="{{x.periodo}}collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo}}">
-                <div class="panel-body">
-                  <h1>
-                    {{x.get_estado}}
-                  </h1>
-                  <h1>
-                    planilla
-                  </h1>
-                  <h1>
-                    planilla
-                  </h1>
-                  <h1>
-                    planilla
-                  </h1>
-                </div>
-              </div>
-            </div>
-        {% endfor %}
         {% if corte == 0 %}
           <div class="panel panel-default">
-              <div class="panel-heading" role="tab" id="{{actual}}">
+              <div class="panel-heading" role="tab" id="{{actual.periodo}}">
                 <h4 class="panel-title">
-                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{actual}}collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    {{actual}}
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{actual.periodo}}collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {{actual.periodo}}
                   </a>
                 </h4>
               </div>
-              <div id="{{actual}}collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{actual}}">
+              <div id="{{actual.periodo}}collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{actual.periodo}}">
                 <div class="panel-body">
                   <form action="javascript:Inscribirse()" id="registra_actual"> 
                     <div class="form-group col-md-4">
@@ -147,64 +120,96 @@ Servicio de {{alumnos.nombres}} {{alumnos.apellidos}}
               </div>
           </div>
         {% endif %}
+        {% for x in cortes %}
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="{{x.periodo.periodo}}">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{x.periodo.periodo}}collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {{x.periodo.periodo}}
+                  </a>
+                </h4>
+              </div>
+              <div id="{{x.periodo.periodo}}collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo.periodo}}">
+                <div class="panel-body">
+                  <h1>
+                    {{x.get_estado}}
+                  </h1>
+                  <h1>
+                    planilla
+                  </h1>
+                  <h1>
+                    planilla
+                  </h1>
+                  <h1>
+                    planilla
+                  </h1>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
       </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="messages">
+    <div role="tabpanel" class="tab-pane" id="tutor_tab">
       <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
         {% for x in cortes %}
           <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="{{x.periodo}}_tutor">
+            <div class="panel-heading" role="tab" id="{{x.periodo.periodo}}_tutor">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#{{x.periodo}}_tutorcollapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#{{x.periodo.periodo}}_tutorcollapseOne" aria-expanded="true" aria-controls="collapseOne">
                   {{x.periodo.periodo}}
                 </a>
               </h4>
             </div>
-            <div id="{{x.periodo}}_tutorcollapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo}}_tutor">
+            <div id="{{x.periodo.periodo}}_tutorcollapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo.periodo}}_tutor">
               <div class="panel-body">
-                <h1>
-                  Nombre: {{x.tutor.profesor.nombres}} {{x.tutor.profesor.apellidos}}
-                </h1>
-                <h1>
-                  Telefonos: {{x.tutor.profesor.telefono1}}, {{x.tutor.profesor.telefono2}}
-                </h1>
-                <h1>
-                  Correo: {{x.tutor.profesor.email}}
-                </h1>
+                {% if x.tutor %}
+                  <h3>
+                    Nombre: {{x.tutor.profesor.nombres}} {{x.tutor.profesor.apellidos}}
+                  </h3>
+                  <h3>
+                    Telefonos: {{x.tutor.profesor.telefono1}}, {{x.tutor.profesor.telefono2}}
+                  </h3>
+                  <h3>
+                    Correo: {{x.tutor.profesor.email}}
+                  </h3>
+                {% else %}
+                  <h1>No Posses Un Tutor Assignado</h1>
+                  <button class="btn btn-primary" onclick="obtener_tutor({{x.id}})">Obtener Tutor</button>
+                {% endif %}
               </div>
             </div>
           </div>
       {% endfor %}
       </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="settings">
+    <div role="tabpanel" class="tab-pane" id="institucion_tab">
       <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
       {% for x in cortes %}
           <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="{{x.periodo}}_institucion">
+            <div class="panel-heading" role="tab" id="{{x.periodo.periodo}}_institucion">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#{{x.periodo}}_institucioncollapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#{{x.periodo.periodo}}_institucioncollapseOne" aria-expanded="true" aria-controls="collapseOne">
                   {{x.periodo.periodo}}
                 </a>
               </h4>
             </div>
-            <div id="{{x.periodo}}_institucioncollapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo}}_institucion">
+            <div id="{{x.periodo.periodo}}_institucioncollapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{x.periodo.periodo}}_institucion">
               <div class="panel-body">
-                <h1>
+                <h3>
                   Nombre: {{x.intitucion.nombre}}
-                </h1>
-                <h1>
+                </h3>
+                <h3>
                   Telefonos: {{x.intitucion.telefono}}
-                </h1>
-                <h1>
+                </h3>
+                <h3>
                   Direccion: {{x.intitucion.direccion}}
-                </h1>
-                <h1>
+                </h3>
+                <h3>
                   Enlace: {{x.intitucion.enlace}}
-                </h1>
-                <h1>
+                </h3>
+                <h3>
                   Telefono Del Enlace: {{x.intitucion.telefono_de_enlace}}
-                </h1>
+                </h3>
               </div>
             </div>
           </div>
