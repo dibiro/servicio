@@ -28,6 +28,17 @@ class Perido(models.Model):
         return '%s (%s)' % (self.periodo, mensaje)
 
 
+class Facultad(models.Model):
+    nombre = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        db_table = 'facultad'
+        verbose_name_plural = "Facultades"
+
+    def __unicode__(self):
+        return '%s' % (self.nombre)
+
+
 class Alumnos(models.Model):
     SEX_CHOICES = (("1", "Masculino"), ("2", "Femenino"))
     cedula = models.CharField(max_length=50)
@@ -39,7 +50,7 @@ class Alumnos(models.Model):
     email = models.EmailField(blank=True, null=True)
     sexo = models.CharField(max_length=2, choices=SEX_CHOICES, blank=True, null=True)
     fecha_de_nacimiento = models.DateField(blank=True, null=True)
-    periodo = models.ForeignKey(Perido, blank=True, null=True)
+    facultad = models.ForeignKey(Facultad, blank=True, null=True)
 
     def get_sex(self):
         if self.sexo == '1':
@@ -89,12 +100,6 @@ class Instituciones(models.Model):
     enlace = models.CharField(max_length=500)
     telefono_de_enlace = models.CharField(max_length=500)
     estado = models.CharField(max_length=2, choices=TYPE_CHOICES, blank=True, null=True)
-    cupos = models.IntegerField()
-    cupos_disponibles = models.IntegerField()
-
-    def get_cupos(self):
-        now = timezone.now()
-        return False
 
     class Meta:
         db_table = 'escuelas'
@@ -102,6 +107,24 @@ class Instituciones(models.Model):
 
     def __unicode__(self):
         return '%s, Telefono: %s, Direccion: %s)' % (self.nombre, self.telefono, self.direccion)
+
+
+class Cupos(models.Model):
+    cupos = models.IntegerField()
+    periodo = models.ForeignKey(Perido)
+    institucion = models.ForeignKey(Instituciones)
+    facultad = models.ForeignKey(Facultad)
+
+    def cupos_disponibles(self):
+        return self.cupos - Registros.objects.filter(periodo=self.periodo, estudiante__facultad=self.facultad).count()
+
+    class Meta:
+        db_table = 'cupos'
+        verbose_name_plural = "Cupos"
+    
+    def __unicode__(self):
+        cupos_disponibles = self.cupos - Registros.objects.filter(periodo=self.periodo, estudiante__facultad=self.facultad).count()
+        return 'Perido: %s, Institucion: %s, Facultad: %s, Cupos: %s, Cupos Disponibles: %s' % (self.periodo.periodo, self.institucion, self.facultad, self.cupos, cupos_disponibles)
 
 
 class ProfesoresByIntituciones(models.Model):
@@ -115,8 +138,6 @@ class ProfesoresByIntituciones(models.Model):
 
     def save(self, *args, **kwargs):
         super(ProfesoresByIntituciones, self).save(*args, **kwargs)
-        Registros.objects.filter(intitucion=self.institucion, 
-                                 periodo=self.periodo).update(tutor=self)
 
     def __unicode__(self):
         return 'Profesor: %s, institucion: %s, periodo: %s)' % (self.profesor, self.institucion, self.periodo)

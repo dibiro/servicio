@@ -9,6 +9,7 @@ Servicio de {{alumnos.nombres}} {{alumnos.apellidos}}
   </h1>
   <div>
 <input type="hidden" id="id_estudiante" value="{{alumnos.id}}">
+<input type="hidden" id="facultad" value="{{alumnos.facultad.id}}">
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#estudiante" aria-controls="estudiante" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Mis Datos</a></li>
@@ -100,7 +101,7 @@ Servicio de {{alumnos.nombres}} {{alumnos.apellidos}}
                       <label for="Intitucion">Intitucion</label>
                       <select class="form-control" id="Intitucion" name="intitucion" required >
                         <option></option>
-                        {% for y in intituciones %}
+                        {% for y in institutiones %}
                           <option value="{{y.id}}">{{y.nombre}}</option>
                         {% endfor %}
                       </select>

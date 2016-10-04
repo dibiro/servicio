@@ -53,7 +53,7 @@ function crear_estudiante() {
 var cupos = 0;
 
 function cupos_disponibles() {
-  $.getJSON('/cupos_disponibles/', {id: $("#Intitucion").val()}, function(json, textStatus) {
+  $.getJSON('/cupos_disponibles/', {id: $("#Intitucion").val(), facultad: $("#facultad").val()}, function(json, textStatus) {
       cupos = json;
       if (json>1) {
         $("#cupos_text").html('Quedan '+json+ ' Cupos Disponibles');
@@ -88,6 +88,7 @@ function Inscribirse() {
       data: {
         id_estudiante: $("#id_estudiante").val(),
         id_institucion: $("#Intitucion").val(),
+        id_facultad: $("#facultad").val(),
       },
       beforeSend: function(xhr) {xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));},
     })

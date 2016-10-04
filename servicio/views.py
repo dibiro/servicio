@@ -50,6 +50,7 @@ class Index(TemplateView):
     template_name = "index.html"
 
     def get(self, request, *args, **kwargs):
+        facultades = Facultad.objects.all()
         return render(request, self.template_name, locals())
 
 
@@ -61,7 +62,11 @@ class Servicio(TemplateView):
         if alumnos.fecha_de_nacimiento is not None:
             alumnos.fecha_de_nacimiento = alumnos.fecha_de_nacimiento.strftime('%Y-%m-%d')
         cortes = Registros.objects.filter(estudiante=alumnos)
-        intituciones = Instituciones.objects.filter(estado="1", cupos_disponibles__gte=0)
+        cupos = Cupos.objects.filter(institucion__estado="1", facultad=alumnos.facultad)
+        institutiones =  []
+        for x in cupos:
+            if x.cupos_disponibles()>0:
+                institutiones.append(x.institucion)
         actual = corte_actual()
         corte = 0
         for x in cortes:
@@ -114,6 +119,7 @@ def crear_estudiante(request):
             email=request.POST['email'],
             sexo=request.POST['sexo'],
             fecha_de_nacimiento=request.POST['fecha_de_nacimiento'],
+            facultad=request.POST['facultad'],
         )
         alumno.save()
         mensaje = 'Guardado'
@@ -124,8 +130,10 @@ def crear_estudiante(request):
 
 
 def cupos_disponibles(request):
-    cupos = Instituciones.objects.get(id=request.GET['id'])
-    result = json.dumps(cupos.cupos_disponibles, ensure_ascii=False)
+    cupos = Cupos.objects.get(facultad__id=request.GET['facultad'],
+                              institucion__id=request.GET['id'],
+                              periodo=corte_actual())
+    result = json.dumps(cupos.cupos_disponibles(), ensure_ascii=False)
     return HttpResponse(result, content_type='application/json; charset=utf-8')
 
 
@@ -133,24 +141,25 @@ def Inscribirse(request):
     mensaje = 0
     corte = 0
     registro = Registros.objects.filter(estudiante_id=request.POST['id_estudiante'])
+    actual = corte_actual()
     for x in registro:
-        if x.periodo == corte_actual():
+        if x.periodo == actual:
             corte = 1
         if x.estado == '3':
             corte = 1
     if corte == 0:
-        institution = Instituciones.objects.get(id=request.POST['id_institucion'])
-        if institution.cupos_disponibles > 0:
+        cupos = Cupos.objects.get(facultad__id=request.POST['id_facultad'],
+                                  institucion__id=request.POST['id_institucion'],
+                                  periodo=corte_actual())
+        if cupos.cupos_disponibles() > 0:
             registro = Registros(
                 estudiante_id=request.POST['id_estudiante'],
-                intitucion_id=request.POST['id_institucion'],
+                institucion_id=request.POST['id_institucion'],
                 periodo=corte_actual(),
                 estado="2",
             )
             registro.poner_tutor()
             registro.save()
-            institution.cupos_disponibles = institution.cupos_disponibles - 1
-            institution.save()
             mensaje = 1
         else:
             mensaje = 2
