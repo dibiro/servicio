@@ -13,6 +13,7 @@ class Perido(models.Model):
 
     class Meta:
         db_table = 'Perido'
+        verbose_name_plural = "Periodos"
 
     def save(self, *args, **kwargs):
         if self.actual:
@@ -48,6 +49,7 @@ class Alumnos(models.Model):
 
     class Meta:
         db_table = 'alumnos'
+        verbose_name_plural = "Alumnos"
 
     def __unicode__(self):
         return '%s (%s %s)' % (self.cedula, self.nombres, self.apellidos)
@@ -73,6 +75,7 @@ class Profesores(models.Model):
 
     class Meta:
         db_table = 'profesores'
+        verbose_name_plural = "Profesores"
 
     def __unicode__(self):
         return '%s (%s %s)' % (self.cedula, self.nombres, self.apellidos)
@@ -95,6 +98,7 @@ class Instituciones(models.Model):
 
     class Meta:
         db_table = 'escuelas'
+        verbose_name_plural = "Instituciones"
 
     def __unicode__(self):
         return '%s, Telefono: %s, Direccion: %s)' % (self.nombre, self.telefono, self.direccion)
@@ -107,6 +111,7 @@ class ProfesoresByIntituciones(models.Model):
 
     class Meta:
         db_table = 'profesores_by_intituciones'
+        verbose_name_plural = "Profesors Asignados a Instituciones"
 
     def save(self, *args, **kwargs):
         super(ProfesoresByIntituciones, self).save(*args, **kwargs)
@@ -147,6 +152,7 @@ class Registros(models.Model):
 
     class Meta:
         db_table = 'registros'
+        verbose_name_plural = "Registros"
 
     def __unicode__(self):
         return 'Estudiante: %s, Tutor: %s, Escuela: %s)' % (self.estudiante, self.tutor, self.institucion)

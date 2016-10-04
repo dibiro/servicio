@@ -9,7 +9,7 @@ LOGOUT_URL = '/logout/'
 
 INSTALLED_APPS = [
     'easy_select2',
-    'django_admin_bootstrapped',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

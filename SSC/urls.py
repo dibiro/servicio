@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from servicio.views import *
 
 urlpatterns = [
+	url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/', login_view),
     url(r'^$', Index.as_view()),
