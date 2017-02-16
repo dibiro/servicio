@@ -1,0 +1,66 @@
+{% extends "princ.html"%}
+{% block title %}
+Reoportes
+{% endblock %}
+{% load staticfiles %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Listado DE Alunos Asignados A Una Institucion</h3>
+      </div>
+      <div class="panel-body">
+        <form action="javascript:listadoestudianteintituciones()" id="registra_actual">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="Intitucion">Intitucion</label>
+              <select class="form-control" id="Intitucion" name="intitucion" required >
+                <option></option>
+                {% for y in institutiones %}
+                  <option value="{{y.id}}">{{y.nombre}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+          </div> 
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="Periodo">Periodo</label>
+              <select class="form-control" id="Periodo" name="Periodo" required >
+                <option></option>
+                {% for y in periodos %}
+                  <option value="{{y.id}}">{{y.periodo}} {% if y.actual %}
+                    (Este Es El Periodo Actual)
+                  {% endif %}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+          </div> 
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="Facultad">Facultad</label>
+              <select class="form-control" id="Facultad" name="Facultad" required >
+                <option></option>
+                {% for y in facultades %}
+                  <option value="{{y.id}}">{{y.nombre}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+          </div> 
+          <button type="submit" class="btn btn-primary">Reporte</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block js %}
+    
+{% endblock %}

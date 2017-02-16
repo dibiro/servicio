@@ -153,6 +153,7 @@ class Registros(models.Model):
     fecha_de_fin = models.DateField(blank=True, null=True)
     periodo = models.ForeignKey(Perido)
     estado = models.CharField(max_length=2, choices=STATUS_CHOICES, blank=True, null=True)
+    numeros_de_beneficiarios = models.IntegerField()
 
     def get_estado(self):
         if self.estado == '1':

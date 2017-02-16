@@ -9,7 +9,8 @@ import json
 from django.conf import settings as _settings
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import get_connection, send_mail, BadHeaderError
-from datetime import datetime, date, timedelta
+import datetime
+from easy_pdf.views import PDFTemplateView
 
 
 def corte_actual():
@@ -74,6 +75,16 @@ class Servicio(TemplateView):
                 corte = 1
         if Registros.objects.filter(estudiante=alumnos, estado="3").exists():
             corte = 1
+        return render(request, self.template_name, locals())
+
+
+class Reporte(TemplateView):
+    template_name = "reportes.html"
+
+    def get(self, request, *args, **kwargs):
+        institutiones = Instituciones.objects.all()
+        facultades = Facultad.objects.all()
+        periodos = Perido.objects.all()
         return render(request, self.template_name, locals())
 
 
@@ -157,6 +168,7 @@ def Inscribirse(request):
                 institucion_id=request.POST['id_institucion'],
                 periodo=corte_actual(),
                 estado="2",
+                numeros_de_beneficiarios=request.POST['numeros_de_beneficiarios'],
             )
             registro.poner_tutor()
             registro.save()
@@ -175,3 +187,25 @@ def poner_tutor_v(request):
     result = json.dumps(dicc, ensure_ascii=False)
     return HttpResponse(result, content_type='application/json; charset=utf-8')
 
+
+class ReporteIntitucionPeriodo(PDFTemplateView):
+    template_name = "pdf/registro_perido.html"
+
+    def get_context_data(self,
+            periodo_id,
+            institucion_id,
+            facultad_id,
+            **kwargs
+        ):
+        fecha = datetime.date.today()
+        requests = Registros.objects.filter(
+            institucion_id=institucion_id,
+            periodo_id=periodo_id,
+            estudiante__facultad_id=facultad_id
+        )
+        return super(ReporteIntitucionPeriodo, self).get_context_data(
+            pagesize="A4 landscape",
+            title="Informe De Estudiaten en intituciones",
+            requests=requests,
+            **kwargs
+        )

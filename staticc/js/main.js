@@ -53,7 +53,7 @@ function crear_estudiante() {
 var cupos = 0;
 
 function cupos_disponibles() {
-  $.getJSON('/cupos_disponibles/', {id: $("#Intitucion").val()}, function(json, textStatus) {
+  $.getJSON('/cupos_disponibles/', {id: $("#Intitucion").val(), facultad: $("#facultad").val()}, function(json, textStatus) {
       cupos = json;
       if (json>1) {
         $("#cupos_text").html('Quedan '+json+ ' Cupos Disponibles');
@@ -82,12 +82,13 @@ function Inscribirse() {
   if (cupos>0) {
     $(this).attr('disabled', 'disabled');
     $.ajax({
-      url: 'crear_estudiante/',
+      url: '/Inscribirse/',
       type: 'POST',
       dataType: 'json',
       data: {
         id_estudiante: $("#id_estudiante").val(),
         id_institucion: $("#Intitucion").val(),
+        id_facultad: $("#facultad").val(),
       },
       beforeSend: function(xhr) {xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));},
     })
@@ -99,7 +100,7 @@ function Inscribirse() {
         OmegaNotify.fail('Se agotaron los cupos para esta institucion');
         setTimeout(function(){ location.reload(); }, 3000);
       }else {
-        OmegaNotify.fail('Ya te encuentras inscrito en este corte');
+        OmegaNotify.fail('Ya te encuentras inscrito en este corte o ya tienes otro corte como culminado');
         setTimeout(function(){ location.reload(); }, 3000);
       };
     })
@@ -111,4 +112,38 @@ function Inscribirse() {
     OmegaNotify.fail('Ya no hay cupos disponible para esta intitucion');
     $("#Intitucion").val("");
   };
+}
+function obtener_tutor(id) {
+  $.ajax({
+    url: '/poner_tutor/',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      id: id,
+    },
+    beforeSend: function(xhr) {xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));},
+  })
+  .done(function(data) {
+    if (data.dato==1) {
+      OmegaNotify.success('Felicidades Ya Se Te Assigno Un Tutor');
+      setTimeout(function(){ location.reload(); }, 3000);
+    } else if (data.dato==0) {
+      OmegaNotify.fail('Aun No Se Assignado Un Tutor A Esta Institucion');
+    };
+  })
+  .fail(function() {
+  })
+  .always(function() {
+  });
+}
+
+function listadoestudianteintituciones() {
+  var win = window.open('/InformeEstudiantesEnInstituciones.pdf/'+$("#Periodo").val()+'/'+$("#Intitucion").val()+'/'+$("#Facultad").val(), '_blank');
+  if (win) {
+      //Browser has allowed it to be opened
+      win.focus();
+  } else {
+      //Browser has blocked it
+      alert('Please allow popups for this website');
+  }
 }

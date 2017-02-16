@@ -4,12 +4,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&3y)yz=hvkrriio!z3a1=^&(q-kqd8+0r!uv)c6njwr&&p)&a8'
 DEBUG = True
 ALLOWED_HOSTS = []
-LOGIN_URL = '/login/'
+LOGIN_URL = '/admin/login/'
 LOGOUT_URL = '/logout/'
 
 INSTALLED_APPS = [
     'easy_select2',
-    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

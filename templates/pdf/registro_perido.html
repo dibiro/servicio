@@ -1,0 +1,67 @@
+{% extends "easy_pdf/base.html" %}
+{% block extra_style %}
+  <style type="text/css">
+
+  </style>
+{% endblock %}
+{% block content %}
+  <div id="content">
+    <br>
+    <br>
+    <br>
+    <center>
+      <h1>lista de Estudian Institucion: {{requests.0.institucion.nombre}} En El Periodo {{requests.0.periodo.periodo}}</h1> 
+    </center>
+    <br>
+    <br>
+    <br>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Nombres
+          </th>
+          <th>
+            Apellidos
+          </th>
+          <th>
+            Cedula
+          </th>
+          <th>
+            Telefono 1
+          </th>
+          <th>
+            Telefono 2
+          </th>
+          <th>
+            Email
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for estudiante in requests %}
+          <tr>
+            <td>
+              {{estudiante.estudiante.nombres}}
+            </td>
+            <td>
+              {{estudiante.estudiante.apellidos}}
+            </td>
+            <td>
+              {{estudiante.estudiante.cedula}}
+            </td>
+            <td>
+              {{estudiante.estudiante.telefono1}}
+            </td>
+            <td>
+              {{estudiante.estudiante.telefono2}}
+            </td>
+            <td>
+              {{estudiante.estudiante.email}}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

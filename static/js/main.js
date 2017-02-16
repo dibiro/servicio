@@ -136,3 +136,14 @@ function obtener_tutor(id) {
   .always(function() {
   });
 }
+
+function listadoestudianteintituciones() {
+  var win = window.open('/InformeEstudiantesEnInstituciones.pdf/'+$("#Periodo").val()+'/'+$("#Intitucion").val()+'/'+$("#Facultad").val(), '_blank');
+  if (win) {
+      //Browser has allowed it to be opened
+      win.focus();
+  } else {
+      //Browser has blocked it
+      alert('Please allow popups for this website');
+  }
+}

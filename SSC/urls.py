@@ -16,4 +16,8 @@ urlpatterns = [
     url(r'^Inscribirse/', Inscribirse),
     url(r'^poner_tutor/', poner_tutor_v),
     url(r'^servicio/(?P<pk>[0-9]+)', Servicio.as_view()),
+    url(r'^reportes/', login_required(Reporte.as_view())),
+    url(r'^InformeEstudiantesEnInstituciones.pdf/(?P<periodo_id>\d+)/(?P<institucion_id>\d+)/(?P<facultad_id>\d+)/$',
+        login_required(ReporteIntitucionPeriodo.as_view())
+    ),
 ]

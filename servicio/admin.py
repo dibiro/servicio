@@ -26,11 +26,25 @@ class AlumnosAdmin(admin.ModelAdmin):
     search_fields = ['cedula', 'nombres', 'apellidos']
 
 
+class CuposPorInstitucionesInline(admin.TabularInline):
+    model = Cupos
+    form = CuposForm
+
+
+class TutoresPorInstitucionesInline(admin.TabularInline):
+    model = ProfesoresByIntituciones
+    form = ProfesoresByIntitucionesForm
+
+
+class InstitucionesAdmin(admin.ModelAdmin):
+    inlines = [ CuposPorInstitucionesInline, TutoresPorInstitucionesInline, ]
+
+
 admin.site.register(Alumnos, AlumnosAdmin)
 admin.site.register(Profesores)
 admin.site.register(Perido)
 admin.site.register(ProfesoresByIntituciones, ProfesoresByIntitucionesAdmin)
-admin.site.register(Instituciones)
+admin.site.register(Instituciones, InstitucionesAdmin)
 admin.site.register(Facultad)
 admin.site.register(Registros, RegistrosAdmin)
 admin.site.register(Cupos, CuposAdmin)
