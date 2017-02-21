@@ -2,8 +2,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&3y)yz=hvkrriio!z3a1=^&(q-kqd8+0r!uv)c6njwr&&p)&a8'
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['localhost',]
 LOGIN_URL = '/admin/login/'
 LOGOUT_URL = '/logout/'
 
